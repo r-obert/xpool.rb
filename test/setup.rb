@@ -1,5 +1,5 @@
 require 'bundler/setup'
-require 'xpool'
+require 'zpool'
 require 'test/unit'
 require 'fileutils'
 require 'mocha/setup'

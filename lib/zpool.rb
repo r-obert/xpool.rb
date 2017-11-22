@@ -1,5 +1,5 @@
 class ZPool
-  require 'ichannel'
+  require 'zchannel'
   require 'timeout'
   require 'logger'
   require 'rbconfig'
@@ -35,7 +35,7 @@ class ZPool
   #   The number of subprocesses to spawn.
   #   Defaults to the number of cores on your CPU.
   #
-  # @return [ZPool]
+  # @return [XPool]
   #
   def initialize(size=number_of_cpu_cores)
     @pool = Array.new(size) { Process.new }
@@ -46,7 +46,7 @@ class ZPool
   #   The number of subprocesses to add to the pool.
   #
   # @return
-  #   (see ZPool#resize!)
+  #   (see XPool#resize!)
   #
   def expand(number)
     resize! size + number
@@ -58,7 +58,7 @@ class ZPool
   #   A graceful shutdown is performed.
   #
   # @raise
-  #   (see ZPool#shrink!)
+  #   (see XPool#shrink!)
   #
   # @return
   #   (see Xpool#shrink!)
@@ -80,7 +80,7 @@ class ZPool
   #   When _number_ is greater than {#size}.
   #
   # @return
-  #   (see ZPool#resize!)
+  #   (see XPool#resize!)
   #
   def shrink!(number)
     present_size = size
@@ -91,7 +91,7 @@ class ZPool
   end
 
   #
-  # @return [Array<ZPool::Process>]
+  # @return [Array<XPool::Process>]
   #   Returns an Array of failed processes.
   #
   def failed_processes
@@ -102,15 +102,15 @@ class ZPool
   # Broadcasts _unit_ to be run across all subprocesses in the pool.
   #
   # @example
-  #   pool = ZPool.new 5
+  #   pool = XPool.new 5
   #   pool.broadcast unit
   #   pool.shutdown
   #
   # @raise [RuntimeError]
   #   When a subprocess in the pool is dead.
   #
-  # @return [Array<ZPool::Process>]
-  #   Returns an array of ZPool::Process objects
+  # @return [Array<XPool::Process>]
+  #   Returns an array of XPool::Process objects
   #
   def broadcast(unit, *args)
     @pool.map do |process|
@@ -135,7 +135,7 @@ class ZPool
           @pool.each(&:shutdown)
         end
       rescue Timeout::Error
-        ZPool.log "'#{timeout}' seconds elapsed, switching to hard shutdown."
+        XPool.log "'#{timeout}' seconds elapsed, switching to hard shutdown."
         shutdown!
       end
     else
@@ -156,7 +156,7 @@ class ZPool
   # Resize the pool (gracefully, if neccesary)
   #
   # @param
-  #   (see ZPool#resize!)
+  #   (see XPool#resize!)
   #
   # @return [void]
   #
@@ -168,7 +168,7 @@ class ZPool
   # Resize the pool (with force, if neccesary).
   #
   # @example
-  #   pool = ZPool.new 5
+  #   pool = XPool.new 5
   #   pool.resize! 3
   #   pool.shutdown
   #
@@ -190,8 +190,8 @@ class ZPool
   # @raise [RuntimeError]
   #   When the pool is dead (no subprocesses are left running)
   #
-  # @return [ZPool::Process]
-  #   Returns an instance of ZPool::Process.
+  # @return [XPool::Process]
+  #   Returns an instance of XPool::Process.
   #
   def schedule(unit,*args)
     if size == 0 # dead pool
@@ -218,7 +218,7 @@ class ZPool
     @pool.all?(&:busy?)
   end
 
-private
+  private
   def raise_if(predicate, e, m)
     if predicate
       raise e, m
