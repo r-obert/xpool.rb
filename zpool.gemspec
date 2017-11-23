@@ -13,5 +13,5 @@ Gem::Specification.new do |gem|
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.require_paths = ["lib"]
   gem.version       = ZPool::VERSION
-  gem.add_runtime_dependency 'zchannel', "~> 0.5.0"
+  gem.add_runtime_dependency 'zchannel.rb', "~> 0.5.0"
 end

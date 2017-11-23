@@ -57,7 +57,7 @@ class ZPool::Process
         "cannot schedule work on a dead process (with ID: #{@id})"
     end
     @frequency += 1
-    @channel.put unit: unit, args: args
+    @channel.send unit: unit, args: args
     self
   end
 
@@ -147,7 +147,7 @@ class ZPool::Process
   def synchronize!
     return if @shutdown
     while @s_channel.readable?
-      @states = @s_channel.get
+      @states = @s_channel.recv
     end
     @states
   end
@@ -172,16 +172,16 @@ class ZPool::Process
   def read_loop
     if @channel.readable?
       @frequency += 1
-      @s_channel.put busy: true
-      msg = @channel.get
+      @s_channel.send busy: true
+      msg = @channel.recv
       msg[:unit].setup if @frequency == 1 && msg[:unit].respond_to?(:setup)
       msg[:unit].run *msg[:args]
-      @s_channel.put busy: false
+      @s_channel.send busy: false
     else
       sleep 0.05
     end
   rescue Exception => e
-    @s_channel.put failed: true, dead: true, backtrace: e.backtrace
+    @s_channel.send failed: true, dead: true, backtrace: e.backtrace
     ZPool.log "Process with ID '#{@id}' has failed."
     raise e
   ensure
