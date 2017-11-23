@@ -9,7 +9,7 @@ __OVERVIEW__
 |:----------------|:--------------------------------------------------
 | Homepage        | https://github.com/r-obert/zpool.rb
 | Documentation   | http://rubydoc.info/github/r-obert/zpool.rb/frames
-| CI              | [![Build Status](https://travis-ci.org/r-obert/zpool.rb.png)](https://travis-ci.org/r-obert/zpool)
+| CI              | [![Build Status](https://travis-ci.org/r-obert/zpool.rb.png)](https://travis-ci.org/r-obert/zpool.rb)
 | Author          | 1xAB Software
 
 
