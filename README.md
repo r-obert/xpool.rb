@@ -1,3 +1,8 @@
+__Mirrors__
+
+* [Github](https://github.com/r-obert/zpool.rb)
+* [Gitlab](https://gitlab.com/r-obert/zpool.rb)
+
 __OVERVIEW__
 
 | Project         | zpool
