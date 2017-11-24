@@ -92,6 +92,15 @@ class ZPool
 
   #
   # @return [Array<XPool::Process>]
+  #   Returns an array of all processes ever known to this pool,
+  #   including dead processes.
+  #
+  def all_processes
+    @pool.dup
+  end
+
+  #
+  # @return [Array<XPool::Process>]
   #   Returns an Array of failed processes.
   #
   def failed_processes

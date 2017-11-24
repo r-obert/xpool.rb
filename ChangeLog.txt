@@ -1,3 +1,8 @@
+== HEAD
+	- Add XPool#all_processes.
+	  It returns an array of all XPool::Process objects,
+	  ever managed by a pool, including dead processes.
+
 == v0.11.0
 	- no longer log from trap(…) block.
 	the logger cannot log from within a trap block on Ruby2, so I've removed

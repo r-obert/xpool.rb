@@ -1,5 +1,6 @@
 require 'bundler/setup'
 require 'zpool'
+require 'pry'
 require 'test/unit'
 require 'fileutils'
 require 'mocha/setup'

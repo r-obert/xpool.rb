@@ -69,6 +69,7 @@ class ZPoolTest < Test::Unit::TestCase
     @pool.schedule Raiser.new
     @pool.shutdown
     @pool.failed_processes.each(&:restart)
+    binding.pry
     assert_equal 1, @pool.size
   end
 
