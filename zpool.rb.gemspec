@@ -2,7 +2,7 @@
 require File.expand_path('../lib/zpool/version', __FILE__)
 
 Gem::Specification.new do |gem|
-  gem.name          = "zpool"
+  gem.name          = "zpool.rb"
   gem.authors       = ["1xAB Software"]
   gem.email         = ["1xAB@protonmail.com"]
   gem.description   = "Provides a lightweight process pool implementation built with zchannel"
