@@ -1,19 +1,6 @@
-__Mirrors__
+# ZPool
 
-* [Github](https://github.com/r-obert/zpool.rb)
-* [Gitlab](https://gitlab.com/r-obert/zpool.rb)
-
-__OVERVIEW__
-
-| Project         | zpool
-|:----------------|:--------------------------------------------------
-| Homepage        | https://github.com/r-obert/zpool.rb
-| Documentation   | http://rubydoc.info/github/r-obert/zpool.rb/frames
-| CI              | [![Build Status](https://travis-ci.org/r-obert/zpool.rb.png)](https://travis-ci.org/r-obert/zpool.rb)
-| Author          | 1xAB Software
-
-
-__DESCRIPTION__
+## <a id='introduction'>Introduction</a>
 
 zpool is a lightweight process pool. A pool manages a group of subprocesses
 that are used when it is asked to dispatch a 'unit of work'. A 'unit of work'
@@ -52,17 +39,11 @@ re-raises the exception so that the failure can be seen. Finally, the process
 running the unit of work exits, and pool is down one process. A failed process
 can be restarted and interacted with, though, so it is possible to recover.
 
-__EXAMPLES__
+## <a id='examples'>Examples</a>
 
-The examples don't demonstrate everything that zpool can do. The
-[API docs](http://rubydoc.info/github/robgleeson/zpool)
-and
-[docs/](https://github.com/robgleeson/zpool/tree/master/docs)
-directory cover the missing pieces.
+1.
 
-_1._
-
-A demo of how to schedule a unit of work:
+Schedule a unit of work:
 
 ```ruby
 #
@@ -80,11 +61,10 @@ pool.schedule Unit.new
 pool.shutdown
 ```
 
-_2._
+2.
 
-A demo of how you can interact with subprocesses through
-[ZPool::Process](http://rdoc.info/github/r-obert/zpool/master/ZPool/Process)
-objects:
+The `ZPool::Process` object assigned to run a unit of work is returned from the  
+`#schedule` method:
 
 ```ruby
 class Unit
@@ -98,10 +78,9 @@ p subprocess.busy? # => true
 pool.shutdown
 ```
 
-_3._
+3.
 
-A demo of how to run a single unit of work across all subprocesses in the
-pool:
+Schedule a unit of work to run across all available processes in a pool:
 
 ```ruby
 class Unit
@@ -114,7 +93,7 @@ pool.broadcast Unit.new
 pool.shutdown
 ```
 
-__SIGUSR1__
+## SIGUSR1
 
 All zpool managed subprocesses define a signal handler for the SIGUSR1 signal.
 A unit of work should never define a signal handler for SIGUSR1 because that
@@ -122,10 +101,10 @@ would overwrite the handler defined by zpool. SIGUSR2 is not caught by zpool
 and it could be a good second option.
 
 
-__INSTALL__
+## Install
 
     $ gem install zpool.rb
 
-__LICENSE__
+## License
 
-MIT. See `LICENSE.txt`
+This project uses the MIT license, see [LICENSE.txt](./LICENSE.txt) for details.
