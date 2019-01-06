@@ -3,11 +3,14 @@ require File.expand_path('../lib/zpool/version', __FILE__)
 
 Gem::Specification.new do |gem|
   gem.name          = "zpool.rb"
-  gem.authors       = ["1xAB Software"]
-  gem.email         = ["1xAB@protonmail.com"]
-  gem.description   = "Provides a lightweight process pool implementation built with zchannel"
+  gem.authors       = ["Robert Gleeson"]
+  gem.email         = ["trebor.g@protonmail.com"]
+  gem.description   = <<-DESC
+zpool.rb is a light weight in-memory process pool that was built with zchannel.rb.
+A process pool can utilise all CPU cores on CRuby.
+DESC
   gem.summary       = gem.description
-  gem.homepage      = "https://github.com/r-obert/zpool"
+  gem.homepage      = "https://github.com/r-obert/zpool.rb"
   gem.files         = `git ls-files`.split($\)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
