@@ -2,7 +2,7 @@
 
 * [Introduction](#introduction)
 * [Examples](#examples)
-* [SIGUSR1][#SIGUSR1]
+* [SIGUSR1](#SIGUSR1)
 * [Install](#install)
 * [License](#license)
 
@@ -37,7 +37,7 @@ pool.shutdown
 2.
 
 The `#schedule` method returns an `ZPool::Process` object that you can interact  
-with. It represents the process chosen to execute your job.
+with. It represents the process chosen to run your job.
 
 ```ruby
 class Job
