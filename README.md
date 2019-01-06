@@ -10,8 +10,8 @@
 
 zpool.rb is a light weight in-memory process pool that was built
 with [zchannel.rb](https://github.com/r-obert/zchannel.rb).  
-A process pool can utilise all CPU cores on CRuby, while also providing an
-isolated memory space for running a job.  
+A process pool can utilise all CPU cores on CRuby, while also providing an isolated  
+memory space for running a job.  
 
 ## <a id='examples'>Examples</a>
 

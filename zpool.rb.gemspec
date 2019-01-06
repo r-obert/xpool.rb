@@ -7,7 +7,8 @@ Gem::Specification.new do |gem|
   gem.email         = ["trebor.g@protonmail.com"]
   gem.description   = <<-DESC
 zpool.rb is a light weight in-memory process pool that was built with zchannel.rb.
-A process pool can utilise all CPU cores on CRuby.
+A process pool can utilise all CPU cores on CRuby, while also providing an isolated
+memory space for running a job.
 DESC
   gem.summary       = gem.description
   gem.homepage      = "https://github.com/r-obert/zpool.rb"
