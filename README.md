@@ -70,8 +70,18 @@ I recommend using SIGUSR2 instead (if that's possible).
 
 ## Install
 
-    $ gem install zpool.rb
+As a rubygem:
+
+    git clone https://github.com/r-obert/zpool.rb.git
+    cd zpool.rb
+    git checkout origin/v1.0.0
+    gem build *.gemspec
+    gem install *.gem
+
+As a bundled gem:
+
+    gem "zpool.rb", github: "r-obert/zpool.rb", tag: "v1.0.0"
 
 ## License
-P
+
 This project uses the MIT license, see [LICENSE.txt](./LICENSE.txt) for details.
