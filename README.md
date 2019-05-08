@@ -73,5 +73,5 @@ I recommend using SIGUSR2 instead (if that's possible).
     $ gem install zpool.rb
 
 ## License
-
+P
 This project uses the MIT license, see [LICENSE.txt](./LICENSE.txt) for details.
