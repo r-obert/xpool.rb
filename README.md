@@ -8,16 +8,13 @@
 
 ## <a id='introduction'>Introduction</a>
 
-zpool.rb is a light weight in-memory process pool that was built
-with [zchannel.rb](https://github.com/r-obert/zchannel.rb).  
-A process pool can utilise all CPU cores on CRuby, while also providing an isolated  
-memory space for running a job.  
+zpool.rb is a light weight in-memory process pool that was built with [zchannel.rb](https://github.com/r-obert/zchannel.rb).  A process pool can utilise all CPU cores on CRuby, while also providing an isolated memory space for running a job.  
 
 ## <a id='examples'>Examples</a>
 
 1.
 
-To schedule a job, define a class that responds to `#run`, then pass an instance  
+To schedule a job, define a class that responds to `#run`, then pass an instance
 of that class to the `#schedule` method:
 
 ```ruby
@@ -36,7 +33,7 @@ pool.shutdown
 
 2.
 
-The `#schedule` method returns an `ZPool::Process` object that you can interact  
+The `#schedule` method returns an `ZPool::Process` object that you can interact
 with. It represents the process chosen to run your job.
 
 ```ruby
@@ -68,7 +65,7 @@ pool.shutdown
 
 ## <a id='SIGUSR1'>SIGUSR1</a>
 
-Processes in a pool attach a handler for 'SIGUSR1' that shouldn't be over-ridden,     
+Processes in a pool attach a handler for 'SIGUSR1' that shouldn't be over-ridden,
 I recommend using SIGUSR2 instead (if that's possible).
 
 ## Install
