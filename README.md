@@ -34,7 +34,7 @@ pool.shutdown
 2.
 
 The `#schedule` method returns an `ZPool::Process` object that you can interact
-with. It represents the process chosen to run your job.
+with. It represents the process chosen to run a job.
 
 ```ruby
 class Job
