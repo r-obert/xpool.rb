@@ -6,7 +6,7 @@ Gem::Specification.new do |gem|
   gem.authors       = ["Robert Gleeson"]
   gem.email         = ["trebor.g@protonmail.com"]
   gem.description   = <<-DESC
-xpool.rb is a light weight in-memory process pool that was built with zchannel.rb.
+xpool.rb is a light weight in-memory process pool that was built with xchannel.rb.
 A process pool can utilise all CPU cores on CRuby, while also providing an isolated
 memory space for running a job.
 DESC

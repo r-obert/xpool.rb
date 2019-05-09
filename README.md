@@ -8,7 +8,7 @@
 
 ## <a id='introduction'>Introduction</a>
 
-xpool.rb is a light weight in-memory process pool that was built with [zchannel.rb](https://github.com/r-obert/zchannel.rb).  A process pool can utilise all CPU cores on CRuby, while also providing an isolated memory space for running a job.  
+xpool.rb is a light weight in-memory process pool that was built with [xchannel.rb](https://github.com/r-obert/xchannel.rb).  A process pool can utilise all CPU cores on CRuby, while also providing an isolated memory space for running a job.  
 
 ## <a id='examples'>Examples</a>
 
