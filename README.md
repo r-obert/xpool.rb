@@ -20,7 +20,6 @@ the number of processes to populate a pool with. It defaults to the number of co
 available on your computers CPU.
 
 ```ruby
-# *Important*
 # Be sure to define a job before initialising the pool or you could run into
 # confusing serialisation errors.
 class Job
@@ -73,6 +72,23 @@ end
 pool = XPool.new(4)
 pool.broadcast(Job.new)
 pool.shutdown
+```
+
+4. 
+
+A pool can be resized to be bigger or smaller.
+
+```ruby
+class Job
+  def run
+    puts Process.pid
+  rescue StandardError
+    retry
+  end
+end
+pool = XPool.new(4)
+pool.shrink! 2 # Reduces the number of child processes to 2.
+pool.expand! 3 # Increase the number of child procceses to 5.
 ```
 
 ## <a id='SIGUSR1'>The SIGUSR1 signal</a>
