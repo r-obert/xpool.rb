@@ -1,11 +1,22 @@
 class XPool::Process
   #
+  # @return [Integer]
+  #   The process ID.
+  #
+  attr_reader :id
+
+  #
   # @return [XPool::Process]
   #   Returns an instance of XPool::Process
   #
   def initialize
-    reset
-    @id = spawn
+    @job_queue = XChannel.unix Marshal
+    @shutdown = false
+    @frequency = 0
+    @id = fork do
+      trap(:SIGUSR1) { @shutdown_requested = true }
+      loop &method(:read_loop)
+    end
   end
 
   #
@@ -17,7 +28,7 @@ class XPool::Process
   # @return [void]
   #
   def shutdown
-    _shutdown 'SIGUSR1' unless @shutdown
+    _shutdown 'SIGUSR1' if ! @shutdown
   end
 
   #
@@ -26,8 +37,15 @@ class XPool::Process
   # @return [void]
   #
   def shutdown!
-    _shutdown 'SIGKILL' unless @shutdown
+    _shutdown 'SIGKILL' if ! @shutdown
   end
+
+  #
+  # @return [Integer]
+  #   Returns true when the process has shutdown.
+  def shutdown?
+    @shutdown
+  end 
 
   #
   # @return [Fixnum]
@@ -45,145 +63,40 @@ class XPool::Process
   #   A variable number of arguments to be passed to #run.
   #
   # @raise [RuntimeError]
-  #   When the process is dead.
+  #   Raised when the process has shutdown.
   #
   # @return [XPool::Process]
   #   Returns self.
   #
-  def schedule(unit,*args)
-    if dead?
-      raise RuntimeError,
-        "cannot schedule work on a dead process (with ID: #{@id})"
+  def schedule(job,*args)
+    if shutdown?
+      raise RuntimeError, "The process has shutdown."
     end
     @frequency += 1
-    @channel.send unit: unit, args: args
+    @job_queue.send job: job, args: args
     self
   end
 
-  #
-  # @return [Boolean]
-  #   Returns true when the process is running a job.
-  #
-  def busy?
-    synchronize!
-    @states[:busy]
-  end
-
-  #
-  # @return [Boolean]
-  #   Returns true when the process is not running a job.
-  #
-  def idle?
-    !busy?
-  end
-
-  #
-  # @return [Boolean]
-  #   Returns true when the process has failed because of an unhandled exception.
-  #
-  def failed?
-    synchronize!
-    @states[:failed]
-  end
-
-  #
-  # @return [Boolean]
-  #   Returns true when the process is still running.
-  #
-  def alive?
-    !dead?
-  end
-
-  #
-  # @return [Boolean]
-  #   Returns true when the process has shutdown.
-  #
-  def dead?
-    synchronize!
-    @states[:dead]
-  end
-
-  #
-  # If a process has failed (see {#failed?}) this method returns the backtrace of
-  # the exception that caused the process to fail.
-  #
-  # @return [Array<String>]
-  #   Returns the backtrace.
-  #
-  def backtrace
-    synchronize!
-    @states[:backtrace]
-  end
-
-  #
-  # Restart the process. The current process shuts down(gracefully) and a new
-  # process replaces it. If the current process has failed the new process will
-  # inherit its message queue.
-  #
-  # @return [Fixnum]
-  #   Returns the process ID of the new process.
-  #
-  def restart
-    _shutdown 'SIGUSR1', false
-    reset(false)
-    @id = spawn
-  end
-
   private
-  def _shutdown(sig, close_channels=true)
+  def _shutdown(sig)
     Process.kill sig, @id
     Process.wait @id
   rescue Errno::ECHILD, Errno::ESRCH
   ensure
-    @states = {dead: true} unless failed?
     @shutdown = true
-    if close_channels
-      @channel.close
-      @status_channel.close
-    end
-  end
-
-  def synchronize!
-    return if @shutdown
-    while @status_channel.readable?
-      @states = @status_channel.recv
-    end
-    @states
-  end
-
-  def reset(new_channels = true)
-    if new_channels
-      @channel = XChannel.unix Marshal
-      @status_channel = XChannel.unix Marshal
-    end
-    @shutdown = false
-    @states = {}
-    @frequency = 0
-  end
-
-  def spawn
-    fork do
-      trap(:SIGUSR1) { @shutdown_requested = true }
-      loop &method(:read_loop)
-    end
+    @job_queue.close
   end
 
   def read_loop
-    if @channel.readable?
+    if @job_queue.readable?
       @frequency += 1
-      @status_channel.send busy: true
-      msg = @channel.recv
-      msg[:unit].run *msg[:args]
-      @status_channel.send busy: false
+      @job_queue.recv[:job].run *msg[:args]
     else
       sleep 0.05
     end
-  rescue Exception => e
-    @status_channel.send failed: true, dead: true, backtrace: e.backtrace
-    raise e
+  rescue StandardError
+    retry
   ensure
-    if @shutdown_requested and !@channel.readable?
-      exit 0
-    end
+    exit 0 if @shutdown_requested and !@job_queue.readable?
   end
 end

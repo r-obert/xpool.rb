@@ -1,15 +1,13 @@
 class XPool
   require 'xchannel'
-  require 'timeout'
-  require 'logger'
   require 'rbconfig'
   require_relative "xpool/version"
   require_relative "xpool/process"
 
   #
   # @param [Fixnum] size
-  #   The number of subprocesses to spawn.
-  #   Defaults to the number of cores on your CPU.
+  #   The number of child processes to spawn.
+  #   Defaults to the number of cores on your computers CPU.
   #
   # @return [XPool]
   #
@@ -67,11 +65,11 @@ class XPool
   end
 
   #
-  # Broadcasts _unit_ to be run across all subprocesses in the pool.
+  # Broadcasts _job_ to be run across all subprocesses in the pool.
   #
   # @example
   #   pool = XPool.new 5
-  #   pool.broadcast unit
+  #   pool.broadcast job
   #   pool.shutdown
   #
   # @raise [RuntimeError]
@@ -80,9 +78,9 @@ class XPool
   # @return [Array<XPool::Process>]
   #   Returns an array of XPool::Process objects
   #
-  def broadcast(unit, *args)
+  def broadcast(job, *args)
     @pool.map do |process|
-      process.schedule unit, *args
+      process.schedule job, *args
     end
   end
 
@@ -149,7 +147,7 @@ class XPool
   end
 
   #
-  # Dispatch a unit of work in a subprocess.
+  # Dispatch a job in a child process.
   #
   # @param
   #   (see Process#schedule)
@@ -160,29 +158,17 @@ class XPool
   # @return [XPool::Process]
   #   Returns an instance of XPool::Process.
   #
-  def schedule(unit,*args)
-    if size == 0 # dead pool
-      raise RuntimeError,
-        "cannot schedule unit of work on a dead pool"
-    end
-    process = @pool.reject(&:dead?).min_by { |p| p.frequency }
-    process.schedule unit, *args
+  def schedule(job,*args)
+    process = @pool.min_by(&:frequency)
+    process.schedule job, *args
   end
 
   #
   # @return [Fixnum]
-  #   Returns the number of alive subprocesses in the pool.
+  #   Returns the number of child processes in a pool.
   #
   def size
-    @pool.count(&:alive?)
-  end
-
-  #
-  # @return [Boolean]
-  #   Returns true when all subprocesses in the pool are busy.
-  #
-  def dry?
-    @pool.all?(&:busy?)
+    @pool.size
   end
 
   private

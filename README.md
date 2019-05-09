@@ -26,6 +26,9 @@ available on your computers CPU.
 class Job
   def run
     sleep 1
+  rescue StandardError
+    # It is recommended to always handle exceptions inside a job.
+    # If an exception is not handled, the next job on the queue will run.
   end
 end
 pool = XPool.new(2)
@@ -36,17 +39,21 @@ pool.shutdown
 2.
 
 The `#schedule` method returns an `XPool::Process` object that you can interact
-with. It represents the process chosen to run a job.
+with. It represents the process chosen to run a job. Arguments can be passed to a job
+from the `#schedule` method.
 
 ```ruby
 class Job
-  def run
-    sleep 1
+  def run(x)
+    sleep x
+  rescue StandardError
+    # It is recommended to always handle exceptions inside a job.
+    # If an exception is not handled, the next job on the queue will run.
   end
 end
 pool = XPool.new(2)
-process = pool.schedule(Job.new)
-process.busy? # => true
+process = pool.schedule(Job.new, 1)
+process.id # => Process ID.
 pool.shutdown
 ```
 
@@ -58,17 +65,20 @@ Broadcast a job to run on all processes in a pool:
 class Job
   def run
     puts Process.pid
+  rescue StandardError
+    # It is recommended to always handle exceptions inside a job.
+    # If an exception is not handled, the next job on the queue will run.
   end
 end
 pool = XPool.new(4)
-pool.broadcast Job.new
+pool.broadcast(Job.new)
 pool.shutdown
 ```
 
 ## <a id='SIGUSR1'>The SIGUSR1 signal</a>
 
 SIGUSR1 is reserved for use by xpool.rb, it is caught when shutting down a process.
-Feel free to use `SIGUSR2` instead.
+Feel free to use `SIGUSR2` or any other signal instead.
 
 ## <a id="install">Install</a>
 
