@@ -11,9 +11,8 @@ class XPool::Process
   #
   # A graceful shutdown of the process.
   #
-  # The signal 'SIGUSR1' is caught in the subprocess and exit is
-  # performed through Kernel#exit after the process has finished
-  # executing its work.
+  # The signal 'SIGUSR1' is caught and exit is performed through Kernel#exit 
+  # after the process has finished running a job.
   #
   # @return [void]
   #
@@ -32,24 +31,24 @@ class XPool::Process
 
   #
   # @return [Fixnum]
-  #   The number of times the process has been asked to schedule work.
+  #   The number of times the process has run a job.
   #
   def frequency
     @frequency
   end
 
   #
-  # @param [#run] unit
-  #   The unit of work
+  # @param [#run] job
+  #   The job.
   #
   # @param [Object] *args
-  #   A variable number of arguments to be passed to #run
+  #   A variable number of arguments to be passed to #run.
   #
   # @raise [RuntimeError]
   #   When the process is dead.
   #
   # @return [XPool::Process]
-  #   Returns self
+  #   Returns self.
   #
   def schedule(unit,*args)
     if dead?
@@ -63,7 +62,7 @@ class XPool::Process
 
   #
   # @return [Boolean]
-  #   Returns true when the process is executing a unit of work.
+  #   Returns true when the process is running a job.
   #
   def busy?
     synchronize!
@@ -72,7 +71,7 @@ class XPool::Process
 
   #
   # @return [Boolean]
-  #   Returns true when the process is not executing a unit of work.
+  #   Returns true when the process is not running a job.
   #
   def idle?
     !busy?
@@ -80,7 +79,7 @@ class XPool::Process
 
   #
   # @return [Boolean]
-  #   Returns true when the process has failed due to an unhandled exception.
+  #   Returns true when the process has failed because of an unhandled exception.
   #
   def failed?
     synchronize!
