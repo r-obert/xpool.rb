@@ -1,5 +1,4 @@
--m markdown -M redcarpet
+-m markdown -M kramdown
 -
 README.md
 LICENSE.txt
-ChangeLog.txt
