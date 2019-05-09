@@ -22,7 +22,6 @@ class XPoolTest < Test::Unit::TestCase
   end
 
   def test_queue
-    return "test is pending"
     @pool.resize!(1)
     writers = Array.new(POOL_SIZE) { IOWriter.new }
     writers.each { |writer| @pool.schedule writer }

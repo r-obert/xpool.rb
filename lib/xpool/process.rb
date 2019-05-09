@@ -87,7 +87,8 @@ class XPool::Process
   def read_loop
     if @job_queue.readable?
       @frequency += 1
-      @job_queue.recv[:job].run *msg[:args]
+      message = @job_queue.recv
+      message[:job].run *message[:args]
     else
       sleep 0.05
     end
