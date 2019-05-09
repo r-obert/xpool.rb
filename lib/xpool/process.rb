@@ -182,11 +182,9 @@ class XPool::Process
     end
   rescue Exception => e
     @status_channel.send failed: true, dead: true, backtrace: e.backtrace
-    XPool.log "Process with ID '#{@id}' has failed."
     raise e
   ensure
-    if @shutdown_requested and not @channel.readable?
-      XPool.log "#{::Process.pid} is about to exit."
+    if @shutdown_requested and !@channel.readable?
       exit 0
     end
   end

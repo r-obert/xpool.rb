@@ -6,30 +6,6 @@ class XPool
   require_relative "xpool/version"
   require_relative "xpool/process"
 
-  def self.debug
-    if block_given?
-      begin
-        @debug = true
-        yield
-      ensure
-        @debug = false
-      end
-    else
-      @debug
-    end
-  end
-
-  def self.debug=(boolean)
-    @debug = boolean
-  end
-
-  def self.log(msg, type = :info)
-    @logger = @logger || Logger.new(STDOUT)
-    if @debug
-      @logger.public_send type, msg
-    end
-  end
-
   #
   # @param [Fixnum] size
   #   The number of subprocesses to spawn.
@@ -88,23 +64,6 @@ class XPool
       ArgumentError,
       "cannot shrink pool by #{number}. pool is only #{present_size} in size."
     resize! present_size - number
-  end
-
-  #
-  # @return [Array<XPool::Process>]
-  #   Returns an array of all processes ever known to this pool,
-  #   including dead processes.
-  #
-  def all_processes
-    @pool.dup
-  end
-
-  #
-  # @return [Array<XPool::Process>]
-  #   Returns an Array of failed processes.
-  #
-  def failed_processes
-    @pool.select(&:failed?)
   end
 
   #

@@ -8,16 +8,6 @@ class XPoolProcessTest < Test::Unit::TestCase
     @process.shutdown!
   end
 
-  def test_resume_process_on_failed_process_queue
-    @process.schedule Raiser.new(0.1)
-    io_writers = Array.new(5) { IOWriter.new }
-    io_writers.each { |writer| @process.schedule writer }
-    until @process.failed?; sleep 0.1; end
-    @process.restart
-    sleep 0.1
-    io_writers.each { |io_writer| assert io_writer.wrote_to_disk? }
-  end
-
   def test_busy_method
     @process.schedule Sleeper.new(0.5)
     sleep 0.1
