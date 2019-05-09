@@ -72,15 +72,13 @@ I recommend using SIGUSR2 instead (if that's possible).
 
 As a rubygem:
 
-    git clone https://github.com/r-obert/xpool.rb.git
-    cd xpool.rb
-    git checkout origin/v1.0.0
-    gem build *.gemspec
-    gem install *.gem
+    gem install xpool.rb
 
-As a bundled gem:
+As a bundled gem, in your Gemfile:
 
-    gem "xpool.rb", github: "r-obert/xpool.rb", tag: "v1.0.0"
+```ruby
+gem "xpool.rb", "~> 1.0"
+```
 
 ## License
 
