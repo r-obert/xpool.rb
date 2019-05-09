@@ -1,5 +1,5 @@
 require 'bundler/setup'
-require 'XPool'
+require 'xpool'
 require 'pry'
 require 'test/unit'
 require 'fileutils'

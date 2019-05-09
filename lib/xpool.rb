@@ -1,10 +1,10 @@
 class XPool
-  require 'zchannel'
+  require 'xchannel'
   require 'timeout'
   require 'logger'
   require 'rbconfig'
-  require_relative "XPool/version"
-  require_relative "XPool/process"
+  require_relative "xpool/version"
+  require_relative "xpool/process"
 
   def self.debug
     if block_given?

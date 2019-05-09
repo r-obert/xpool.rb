@@ -1,5 +1,5 @@
 # -*- encoding: utf-8 -*-
-require File.expand_path('../lib/XPool/version', __FILE__)
+require File.expand_path('../lib/xpool/version', __FILE__)
 
 Gem::Specification.new do |gem|
   gem.name          = "xpool.rb"
@@ -17,5 +17,5 @@ DESC
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.require_paths = ["lib"]
   gem.version       = XPool::VERSION
-  gem.add_runtime_dependency 'zchannel.rb', "~> 0.5.0"
+  gem.add_runtime_dependency 'xchannel.rb', "~> 1.0"
 end
