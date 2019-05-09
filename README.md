@@ -105,7 +105,7 @@ As a rubygem:
 As a bundled gem, in your Gemfile:
 
 ```ruby
-gem "xpool.rb", "~> 1.0"
+gem "xpool.rb", "~> 2.0"
 ```
 
 ## <a id="license">License</a>
