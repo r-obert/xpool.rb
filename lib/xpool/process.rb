@@ -20,24 +20,21 @@ class XPool::Process
   end
 
   #
-  # A graceful shutdown of the process.
-  #
-  # The signal 'SIGUSR1' is caught and exit is performed through Kernel#exit 
-  # after the process has finished running a job.
+  # Perform a graceful shutdown of the process.
   #
   # @return [void]
   #
   def shutdown
-    _shutdown 'SIGUSR1' if ! @shutdown
+    perform_shutdown 'SIGUSR1' if ! @shutdown
   end
 
   #
-  # A non-graceful shutdown through SIGKILL.
+  # Perform a hard shutdown by sending SIGKILL to the process.
   #
   # @return [void]
   #
   def shutdown!
-    _shutdown 'SIGKILL' if ! @shutdown
+    perform_shutdown 'SIGKILL' if ! @shutdown
   end
 
   #
@@ -78,7 +75,7 @@ class XPool::Process
   end
 
   private
-  def _shutdown(sig)
+  def perform_shutdown(sig)
     Process.kill sig, @id
     Process.wait @id
   rescue Errno::ECHILD, Errno::ESRCH
@@ -97,6 +94,6 @@ class XPool::Process
   rescue StandardError
     retry
   ensure
-    exit 0 if @shutdown_requested and !@job_queue.readable?
+    exit 0 if @shutdown_requested && ! @job_queue.readable?
   end
 end
