@@ -173,7 +173,6 @@ class XPool::Process
       @frequency += 1
       @status_channel.send busy: true
       msg = @channel.recv
-      msg[:unit].setup if @frequency == 1 && msg[:unit].respond_to?(:setup)
       msg[:unit].run *msg[:args]
       @status_channel.send busy: false
     else
