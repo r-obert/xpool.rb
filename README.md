@@ -1,4 +1,4 @@
-# zpool.rb
+# xpool.rb
 
 * [Introduction](#introduction)
 * [Examples](#examples)
@@ -8,7 +8,7 @@
 
 ## <a id='introduction'>Introduction</a>
 
-zpool.rb is a light weight in-memory process pool that was built with [zchannel.rb](https://github.com/r-obert/zchannel.rb).  A process pool can utilise all CPU cores on CRuby, while also providing an isolated memory space for running a job.  
+xpool.rb is a light weight in-memory process pool that was built with [zchannel.rb](https://github.com/r-obert/zchannel.rb).  A process pool can utilise all CPU cores on CRuby, while also providing an isolated memory space for running a job.  
 
 ## <a id='examples'>Examples</a>
 
@@ -26,14 +26,14 @@ class Job
     sleep 1
   end
 end
-pool = ZPool.new(2)
+pool = XPool.new(2)
 pool.schedule(Job.new)
 pool.shutdown
 ```
 
 2.
 
-The `#schedule` method returns an `ZPool::Process` object that you can interact
+The `#schedule` method returns an `XPool::Process` object that you can interact
 with. It represents the process chosen to run a job.
 
 ```ruby
@@ -42,7 +42,7 @@ class Job
     sleep 1
   end
 end
-pool = ZPool.new(2)
+pool = XPool.new(2)
 process = pool.schedule(Job.new)
 process.busy? # => true
 pool.shutdown
@@ -58,7 +58,7 @@ class Job
     puts Process.pid
   end
 end
-pool = ZPool.new(4)
+pool = XPool.new(4)
 pool.broadcast Job.new
 pool.shutdown
 ```
@@ -72,15 +72,15 @@ I recommend using SIGUSR2 instead (if that's possible).
 
 As a rubygem:
 
-    git clone https://github.com/r-obert/zpool.rb.git
-    cd zpool.rb
+    git clone https://github.com/r-obert/xpool.rb.git
+    cd xpool.rb
     git checkout origin/v1.0.0
     gem build *.gemspec
     gem install *.gem
 
 As a bundled gem:
 
-    gem "zpool.rb", github: "r-obert/zpool.rb", tag: "v1.0.0"
+    gem "xpool.rb", github: "r-obert/xpool.rb", tag: "v1.0.0"
 
 ## License
 

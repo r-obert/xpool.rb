@@ -27,33 +27,33 @@
 	- default to two subprocesses if CPU core count cannot be guessed.
 	Which is change from the old default of five.
 
-	- add ZPool#resize
+	- add XPool#resize
 	Resize the pool at runtime.
 	If subprocesses are removed from the pool a graceful shutdown is performed on
 	each subprocess that is removed (unlike resize!, which forces a shutdown).
 
-	- add ZPool#expand
+	- add XPool#expand
 	Expand the pool with X subprocesses, where X is the argument to expand(…).
 
-	- add ZPool#shrink
+	- add XPool#shrink
 	Shrink the pool by X subprocesses, where X is the argument to shrink(…).
 	A graceful shutdown is performed on any subprocesses removed from the pool.
 
-	- add ZPool#shrink!
+	- add XPool#shrink!
 	Shrink the pool by X subprocesses, where X is the argument to shrink!(…)
 	A forceful shutdown is performed on any subprocesses removed from the pool.
 
-	- ZPool#resize! now accepts a Fixnum, not a Range.
+	- XPool#resize! now accepts a Fixnum, not a Range.
 	If you want to resize the pool to two subprocesses, the API is now:
 	pool.resize!(2)
 
-	- ZPool#failed_processes persists after a shutdown
+	- XPool#failed_processes persists after a shutdown
 	If a process in the pool has failed and the pool is subsequently shutdown the
-	failed process will remain in ZPool#failed_processes. When a failed process
+	failed process will remain in XPool#failed_processes. When a failed process
 	is restarted the pool is repopulated with an active subprocess and can be
 	used to schedule work again.
 
-	- optimize ZPool#resize!
+	- optimize XPool#resize!
 	A few optimizations:
 
 	* when new_size == current_size, there's no resize. nothing happens. it's
@@ -75,12 +75,12 @@
 
 == v0.9.0
 	- upgrade to ichannel v5.1.1
-	Which in turn fixes a performance bug in ZPool#schedule. With ichannel v5.0.1
+	Which in turn fixes a performance bug in XPool#schedule. With ichannel v5.0.1
 	the suite runs in 23~ seconds, but with v5.1.1 we run the suite in 3~ seconds.
 	I don't think the performance hit was that bad in earlier versions, but given
 	the right set of circumstances I'm sure it would be an issue.
 
-	- add ZPool::Process#idle?
+	- add XPool::Process#idle?
 	Returns true when the subprocess is considered idle. "idle" means the
 	subprocess is not executing a unit of work.
 
@@ -88,50 +88,50 @@
 	By sleeping for a short period of time we avoid pegging the CPU at
 	80-100% when a subprocess is idle.
 
-	- add ZPool::Process#backtrace
+	- add XPool::Process#backtrace
 	Returns the backtrace of the exception that caused a subprocess to fail. Returns
 	nil whenever the subprocess is not in a failed state.
 
-	- add ZPool::Process#failed?
+	- add XPool::Process#failed?
 	Returns true when a unit of work does not handle an exception, which causes
 	the subprocess it is running in to exit. A failed subprocess can be restarted
 	through Process#restart.
 
-	- add ZPool::Process#restart
+	- add XPool::Process#restart
 	Restarts a subprocess by gracefully shutting down and respawning a new subprocess.
 
-	- add ZPool#dry?
+	- add XPool#dry?
 	Returns true when all subprocesses in the pool are busy.
 
-	- ZPool::Process#schedule raises when the subprocess is dead
-	Incase the subprocess has been shutdown a call to ZPool::Process#schedule will
+	- XPool::Process#schedule raises when the subprocess is dead
+	Incase the subprocess has been shutdown a call to XPool::Process#schedule will
 	raise a RuntimeError.
 
-	- ZPool#schedule raises when the pool has no active subprocesses
-	Incase the pool has been shutdown a call to ZPool#schedule will raise a
+	- XPool#schedule raises when the pool has no active subprocesses
+	Incase the pool has been shutdown a call to XPool#schedule will raise a
 	RuntimeError.
 
-	- add ZPool::Process#frequency
+	- add XPool::Process#frequency
 	Returns the number of times a subprocess has been asked to schedule work.
 
-	- ZPool#schedule schedules work on the least busy subprocess
+	- XPool#schedule schedules work on the least busy subprocess
 	The subprocess picked to run a unit of work is the one who is least busy.
 	"least busy" means it has been asked to schedule the least amount of
 	work.
 
-	- ZPool#schedule returns a ZPool::Process object.
+	- XPool#schedule returns a XPool::Process object.
 	The subprocess that has been picked to run your unit of work is returned
 	by schedule in case you want to interact with the subprocess later on.
 
-	- Add ZPool#broadcast
+	- Add XPool#broadcast
 	The broadcast method can distribute one unit of work across all
 	subprocesses in the pool.
 
-	- Add ZPool::Process#busy?
+	- Add XPool::Process#busy?
 	Returns true when the subprocess is executing a unit of work.
 
 == v0.3.0
-	* Add ZPool#size.
+	* Add XPool#size.
 	It returns the number of alive subprocesses in the pool.
 
 == v0.2.0

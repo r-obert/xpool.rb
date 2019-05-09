@@ -1,3 +1,3 @@
-class ZPool
+class XPool
   VERSION = "1.0.0"
 end

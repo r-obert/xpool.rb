@@ -1,7 +1,7 @@
 require_relative 'setup'
-class ZPoolProcessTest < Test::Unit::TestCase
+class XPoolProcessTest < Test::Unit::TestCase
   def setup
-    @process = ZPool::Process.new
+    @process = XPool::Process.new
   end
 
   def teardown

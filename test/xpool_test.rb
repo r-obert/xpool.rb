@@ -1,8 +1,8 @@
 require_relative 'setup'
-class ZPoolTest < Test::Unit::TestCase
+class XPoolTest < Test::Unit::TestCase
   POOL_SIZE = 2
   def setup
-    @pool = ZPool.new POOL_SIZE
+    @pool = XPool.new POOL_SIZE
   end
 
   def teardown
@@ -79,13 +79,13 @@ class ZPoolTest < Test::Unit::TestCase
   end
 
   def test_shrink
-    ZPool::Process.any_instance.expects(:shutdown).once
+    XPool::Process.any_instance.expects(:shutdown).once
     @pool.shrink 1
     assert_equal POOL_SIZE - 1, @pool.size
   end
 
   def test_shrink!
-    ZPool::Process.any_instance.expects(:shutdown!).once
+    XPool::Process.any_instance.expects(:shutdown!).once
     @pool.shrink! 1
     assert_equal POOL_SIZE - 1, @pool.size
   end

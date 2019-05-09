@@ -1,7 +1,7 @@
-class ZPool::Process
+class XPool::Process
   #
-  # @return [ZPool::Process]
-  #   Returns an instance of ZPool::Process
+  # @return [XPool::Process]
+  #   Returns an instance of XPool::Process
   #
   def initialize
     reset
@@ -48,7 +48,7 @@ class ZPool::Process
   # @raise [RuntimeError]
   #   When the process is dead.
   #
-  # @return [ZPool::Process]
+  # @return [XPool::Process]
   #   Returns self
   #
   def schedule(unit,*args)
@@ -182,11 +182,11 @@ class ZPool::Process
     end
   rescue Exception => e
     @s_channel.send failed: true, dead: true, backtrace: e.backtrace
-    ZPool.log "Process with ID '#{@id}' has failed."
+    XPool.log "Process with ID '#{@id}' has failed."
     raise e
   ensure
     if @shutdown_requested and not @channel.readable?
-      ZPool.log "#{::Process.pid} is about to exit."
+      XPool.log "#{::Process.pid} is about to exit."
       exit 0
     end
   end
