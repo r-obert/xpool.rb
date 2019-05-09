@@ -154,8 +154,8 @@ class XPool::Process
 
   def reset(new_channels = true)
     if new_channels
-      @channel = ZChannel.unix Marshal
-      @s_channel = ZChannel.unix Marshal
+      @channel = XChannel.unix Marshal
+      @s_channel = XChannel.unix Marshal
     end
     @shutdown = false
     @states = {}
