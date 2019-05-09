@@ -1,8 +1,9 @@
 class XPool
   require 'xchannel'
   require 'rbconfig'
-  require_relative "xpool/version"
-  require_relative "xpool/process"
+  require 'timeout'
+  require_relative 'xpool/version'
+  require_relative 'xpool/process'
 
   #
   # @param [Fixnum] size
