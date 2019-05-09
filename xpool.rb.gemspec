@@ -11,7 +11,7 @@ A process pool can utilise all CPU cores on CRuby, while also providing an isola
 memory space for running a job.
 DESC
   gem.summary       = gem.description
-  gem.homepage      = "https://github.com/r-obert/xpool.rb"
+  gem.homepage      = "https://github.com/trebor8/xpool.rb"
   gem.files         = `git ls-files`.split($\)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
