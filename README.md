@@ -2,7 +2,7 @@
 
 * [Introduction](#introduction)
 * [Examples](#examples)
-* [SIGUSR1](#SIGUSR1)
+* [The SIGUSR1 signal](#SIGUSR1)
 * [Install](#install)
 * [License](#license)
 
@@ -15,7 +15,9 @@ xpool.rb is a light weight in-memory process pool that was built with [xchannel.
 1.
 
 To schedule a job, define a class that responds to `#run`, then pass an instance
-of that class to the `#schedule` method:
+of that class to the `#schedule` method. The first argument given to `XPool.new` is 
+the number of processes to populate a pool with. It defaults to the number of cores 
+available on your computers CPU.
 
 ```ruby
 # *Important*
@@ -63,12 +65,12 @@ pool.broadcast Job.new
 pool.shutdown
 ```
 
-## <a id='SIGUSR1'>SIGUSR1</a>
+## <a id='SIGUSR1'>The SIGUSR1 signal</a>
 
-Processes in a pool attach a handler for 'SIGUSR1' that shouldn't be over-ridden,
-I recommend using SIGUSR2 instead (if that's possible).
+SIGUSR1 is reserved for use by xpool.rb, it is caught when shutting down a process.
+Feel free to use `SIGUSR2` instead.
 
-## Install
+## <a id="install">Install</a>
 
 As a rubygem:
 
@@ -80,6 +82,6 @@ As a bundled gem, in your Gemfile:
 gem "xpool.rb", "~> 1.0"
 ```
 
-## License
+## <a id="license">License</a>
 
 This project uses the MIT license, see [LICENSE.txt](./LICENSE.txt) for details.
