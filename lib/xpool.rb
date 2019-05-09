@@ -38,11 +38,10 @@ class XPool
   #   (see Xpool#shrink!)
   #
   def shrink(number)
-    present_size = size
-    raise_if number > present_size,
+    raise_if number > size,
       ArgumentError,
-      "cannot shrink pool by #{number}. pool is only #{present_size} in size."
-    resize present_size - number
+      "cannot shrink pool by #{number}. pool is only #{size} in size."
+    resize size - number
   end
 
   #
@@ -57,11 +56,10 @@ class XPool
   #   (see XPool#resize!)
   #
   def shrink!(number)
-    present_size = size
-    raise_if number > present_size,
+    raise_if number > size,
       ArgumentError,
-      "cannot shrink pool by #{number}. pool is only #{present_size} in size."
-    resize! present_size - number
+      "cannot shrink pool by #{number}. pool is only #{size} in size."
+    resize! size - number
   end
 
   #
