@@ -14,7 +14,6 @@ class XPoolProcessTest < Test::Unit::TestCase
   end
 
   def test_queue
-    #return "test is pending"
     writers = Array.new(5) { IOWriter.new }
     writers.each { |writer| @process.schedule writer }
     @process.shutdown
