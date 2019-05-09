@@ -140,14 +140,14 @@ class XPool::Process
     @shutdown = true
     if close_channels
       @channel.close
-      @s_channel.close
+      @status_channel.close
     end
   end
 
   def synchronize!
     return if @shutdown
-    while @s_channel.readable?
-      @states = @s_channel.recv
+    while @status_channel.readable?
+      @states = @status_channel.recv
     end
     @states
   end
@@ -155,7 +155,7 @@ class XPool::Process
   def reset(new_channels = true)
     if new_channels
       @channel = XChannel.unix Marshal
-      @s_channel = XChannel.unix Marshal
+      @status_channel = XChannel.unix Marshal
     end
     @shutdown = false
     @states = {}
@@ -172,16 +172,16 @@ class XPool::Process
   def read_loop
     if @channel.readable?
       @frequency += 1
-      @s_channel.send busy: true
+      @status_channel.send busy: true
       msg = @channel.recv
       msg[:unit].setup if @frequency == 1 && msg[:unit].respond_to?(:setup)
       msg[:unit].run *msg[:args]
-      @s_channel.send busy: false
+      @status_channel.send busy: false
     else
       sleep 0.05
     end
   rescue Exception => e
-    @s_channel.send failed: true, dead: true, backtrace: e.backtrace
+    @status_channel.send failed: true, dead: true, backtrace: e.backtrace
     XPool.log "Process with ID '#{@id}' has failed."
     raise e
   ensure
