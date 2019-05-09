@@ -4,7 +4,7 @@ require File.expand_path('../lib/xpool/version', __FILE__)
 Gem::Specification.new do |gem|
   gem.name          = "xpool.rb"
   gem.authors       = ["Robert Gleeson"]
-  gem.email         = ["trebor.g@protonmail.com"]
+  gem.email         = ["trebor8-rubygems@protonmail.com"]
   gem.description   = <<-DESC
 xpool.rb is a light weight in-memory process pool that was built with xchannel.rb.
 A process pool can utilise all CPU cores on CRuby, while also providing an isolated
