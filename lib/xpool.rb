@@ -18,7 +18,7 @@ class XPool
 
   #
   # @param [Fixnum] number
-  #   The number of subprocesses to add to the pool.
+  #   The number of child processes to add to the pool.
   #
   # @return
   #   (see XPool#resize!)
@@ -29,7 +29,7 @@ class XPool
 
   #
   # @param [Fixnum] number
-  #   The number of subprocesses to remove from the pool.
+  #   The number of child processes to remove from the pool.
   #   A graceful shutdown is performed.
   #
   # @raise
@@ -47,7 +47,7 @@ class XPool
 
   #
   # @param [Fixnum] number
-  #   The number of subprocesses to remove from the pool.
+  #   The number of child processes to remove from the pool.
   #   A forceful shutdown is performed.
   #
   # @raise [ArgumentError]
@@ -64,7 +64,7 @@ class XPool
   end
 
   #
-  # Broadcasts _job_ to be run across all subprocesses in the pool.
+  # Broadcasts _job_ to be run across all child processes in the pool.
   #
   # @example
   #   pool = XPool.new 5
@@ -152,7 +152,7 @@ class XPool
   #   (see Process#schedule)
   #
   # @raise [RuntimeError]
-  #   When the pool is dead (no subprocesses are left running)
+  #   When the pool is dead (no child processes are left running)
   #
   # @return [XPool::Process]
   #   Returns an instance of XPool::Process.
