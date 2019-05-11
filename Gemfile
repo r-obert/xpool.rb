@@ -7,6 +7,6 @@ group :development do
   gem 'kramdown'
 end
 group :test do
-  gem 'test-unit'
+  gem 'rspec'
 end
 gemspec
