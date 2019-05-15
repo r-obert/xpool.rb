@@ -10,6 +10,9 @@
 
 xpool.rb is a light weight in-memory process pool that was built with [xchannel.rb](https://github.com/rg-3/xchannel.rb).  A process pool can utilise all CPU cores on CRuby, while also providing an isolated memory space for running a job.  
 
+An example use case for xpool.rb is any scenario where a task should be run asynchrousnly, for 
+example to deliver an email in a web application or to perform a blocking task in the background.
+ 
 ## <a id='examples'>Examples</a>
 
 1.
