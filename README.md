@@ -27,10 +27,15 @@ available on your computers CPU.
 # confusing serialisation errors.
 class Job
   def run
-    sleep 1
+    do_work
   rescue StandardError
     # It is recommended to always handle exceptions inside a job.
     # If an exception is not handled, the next job on the queue will run.
+  end
+
+  private 
+  def do_work 
+    # ...
   end
 end
 pool = XPool.new(2)
@@ -46,15 +51,20 @@ from the `#schedule` method.
 
 ```ruby
 class Job
-  def run(x)
-    sleep x
+  def run(email)
+    deliver_email(email)
   rescue StandardError
     # It is recommended to always handle exceptions inside a job.
     # If an exception is not handled, the next job on the queue will run.
   end
+
+  private 
+  def deliver_email(email)
+    # ..
+  end
 end
 pool = XPool.new(2)
-process = pool.schedule(Job.new, 1)
+process = pool.schedule(Job.new, 'user@example.com')
 process.id # => Process ID.
 pool.shutdown
 ```
@@ -66,7 +76,7 @@ Broadcast a job to run on all processes in a pool:
 ```ruby
 class Job
   def run
-    puts Process.pid
+    puts "Hello from #{Process.pid}"
   rescue StandardError
     # It is recommended to always handle exceptions inside a job.
     # If an exception is not handled, the next job on the queue will run.
@@ -84,9 +94,15 @@ A pool can be resized to be bigger or smaller.
 ```ruby
 class Job
   def run
-    puts Process.pid
+    do_work
   rescue StandardError
-    retry
+    # It is recommended to always handle exceptions inside a job.
+    # If an exception is not handled, the next job on the queue will run
+  end
+
+  private 
+  def do_work
+    # ...
   end
 end
 pool = XPool.new(4)
