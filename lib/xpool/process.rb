@@ -45,7 +45,7 @@ class XPool::Process
   end 
 
   #
-  # @return [Fixnum]
+  # @return [Integer]
   #   The number of times the process has run a job.
   #
   def frequency

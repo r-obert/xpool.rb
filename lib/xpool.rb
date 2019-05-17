@@ -6,7 +6,7 @@ class XPool
   require_relative 'xpool/process'
 
   #
-  # @param [Fixnum] size
+  # @param [Integer] size
   #   The number of child processes to spawn.
   #   Defaults to the number of cores on your computers CPU.
   #
@@ -17,7 +17,7 @@ class XPool
   end
 
   #
-  # @param [Fixnum] number
+  # @param [Integer] number
   #   The number of child processes to add to the pool.
   #
   # @return
@@ -28,7 +28,7 @@ class XPool
   end
 
   #
-  # @param [Fixnum] number
+  # @param [Integer] number
   #   The number of child processes to remove from the pool.
   #   A graceful shutdown is performed.
   #
@@ -46,7 +46,7 @@ class XPool
   end
 
   #
-  # @param [Fixnum] number
+  # @param [Integer] number
   #   The number of child processes to remove from the pool.
   #   A forceful shutdown is performed.
   #
@@ -87,7 +87,7 @@ class XPool
   # A graceful shutdown of the pool.
   # Each subprocess in the pool empties its queue and exits normally.
   #
-  # @param [Fixnum] timeout
+  # @param [Integer] timeout
   #   An optional amount of seconds to wait before forcing a shutdown through
   #   {#shutdown!}.
   #
@@ -136,7 +136,7 @@ class XPool
   #   pool.resize! 3
   #   pool.shutdown
   #
-  # @param [Fixnum] new_size
+  # @param [Integer] new_size
   #   The new size of the pool.
   #
   # @return [void]
@@ -163,7 +163,7 @@ class XPool
   end
 
   #
-  # @return [Fixnum]
+  # @return [Integer]
   #   Returns the number of child processes in a pool.
   #
   def size
