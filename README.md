@@ -107,6 +107,7 @@ end
 pool = XPool.new(4)
 pool.shrink! 2 # Reduces the number of child processes to 2.
 pool.expand! 3 # Increase the number of child procceses to 5.
+pool.shutdown
 ```
 
 ## <a id='SIGUSR1'>The SIGUSR1 signal</a>
