@@ -5,11 +5,7 @@ Gem::Specification.new do |gem|
   gem.name          = "xpool.rb"
   gem.authors       = ["Robert Gleeson"]
   gem.email         = ["1xab@protonmail.com"]
-  gem.description   = <<-DESC
-xpool.rb is a light weight in-memory process pool that was built with xchannel.rb.
-A process pool can utilise all CPU cores on CRuby, while also providing an isolated
-memory space for running a job.
-DESC
+  gem.description   = "xpool.rb is an implementation of a process pool that was built with xchan.rb"
   gem.summary       = gem.description
   gem.homepage      = "https://github.com/rg-3/xpool.rb"
   gem.files         = `git ls-files`.split($\)

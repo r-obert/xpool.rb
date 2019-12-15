@@ -2,38 +2,42 @@
 
 * [Introduction](#introduction)
 * [Examples](#examples)
-* [The SIGUSR1 signal](#SIGUSR1)
 * [Install](#install)
 * [License](#license)
 
 ## <a id='introduction'>Introduction</a>
 
-xpool.rb is a light weight in-memory process pool that was built with [xchannel.rb](https://github.com/rg-3/xchannel.rb).  A process pool can utilise all CPU cores on CRuby, while also providing an isolated memory space for running a job.  
+xpool.rb is an implementation of a process pool that was built with
+[xchan.rb](https://github.com/rg-3/xchan.rb). A process pool can utilize all
+cores available on your CPU, and also provide an isolated memory space for
+running a job.  
 
-xpool.rb is not really intended for use inside Rails, but you could give it a try. xpool.rb is best suited for scripts or daemons that need an asynchronous way to schedule jobs without bringing in an external dependency (eg Redis).
- 
+xpool.rb is best suited for long running or short running scripts who want to
+achieve parallelism, it's not well suited for a Rails application and there
+are other projects better suited for Rails, like [Sidekiq](https://github.com/mperham/sidekiq).
+
 ## <a id='examples'>Examples</a>
 
-1.
+__1.__
 
 To schedule a job, define a class that responds to `#run`, then pass an instance
-of that class to the `#schedule` method. The first argument given to `XPool.new` is 
-the number of processes to populate a pool with. It defaults to the number of cores 
+of that class to the `#schedule` method. The first argument given to `XPool.new` is
+the number of processes to populate a pool with. It defaults to the number of cores
 available on your computers CPU.
 
 ```ruby
-# Be sure to define a job before initialising the pool or you could run into
-# confusing serialisation errors.
+# Define a job before initializing the pool or you will run into confusing
+# serialization errors.
 class Job
   def run
     do_work
   rescue StandardError
-    # It is recommended to always handle exceptions inside a job.
-    # If an exception is not handled, the next job on the queue will run.
+    # It's recommended to rescue exceptions inside a job.
+    # If an exception is not rescued, the job won't be retried.
   end
 
-  private 
-  def do_work 
+  private
+  def do_work
     # ...
   end
 end
@@ -42,10 +46,10 @@ pool.schedule(Job.new)
 pool.shutdown
 ```
 
-2.
+__2.__
 
 The `#schedule` method returns an `XPool::Process` object that you can interact
-with. It represents the process chosen to run a job. Arguments can be passed to a job
+with. It represents the process running a job. Arguments can be passed to a job
 from the `#schedule` method.
 
 ```ruby
@@ -53,11 +57,11 @@ class Job
   def run(email)
     deliver_email(email)
   rescue StandardError
-    # It is recommended to always handle exceptions inside a job.
-    # If an exception is not handled, the next job on the queue will run.
+    # It's recommended to rescue exceptions inside a job.
+    # If an exception is not rescued, the job won't be retried.
   end
 
-  private 
+  private
   def deliver_email(email)
     # ..
   end
@@ -68,7 +72,7 @@ process.id # => Process ID.
 pool.shutdown
 ```
 
-3.
+__3.__
 
 Broadcast a job to run on all processes in a pool:
 
@@ -77,8 +81,8 @@ class Job
   def run
     puts "Hello from #{Process.pid}"
   rescue StandardError
-    # It is recommended to always handle exceptions inside a job.
-    # If an exception is not handled, the next job on the queue will run.
+    # It's recommended to rescue exceptions inside a job.
+    # If an exception is not rescued, the job won't be retried.
   end
 end
 pool = XPool.new(4)
@@ -86,7 +90,7 @@ pool.broadcast(Job.new)
 pool.shutdown
 ```
 
-4. 
+__4.__
 
 A pool can be resized to be bigger or smaller.
 
@@ -95,33 +99,28 @@ class Job
   def run
     do_work
   rescue StandardError
-    # It is recommended to always handle exceptions inside a job.
-    # If an exception is not handled, the next job on the queue will run
+    # It's recommended to rescue exceptions inside a job.
+    # If an exception is not rescued, the job won't be retried.
   end
 
-  private 
+  private
   def do_work
     # ...
   end
 end
 pool = XPool.new(4)
-pool.shrink! 2 # Reduces the number of child processes to 2.
-pool.expand! 3 # Increase the number of child procceses to 5.
+pool.shrink! 2 # Reduces the number of pool processes to 2.
+pool.expand! 3 # Increase the number of pool processes to 5.
 pool.shutdown
 ```
 
-## <a id='SIGUSR1'>The SIGUSR1 signal</a>
-
-SIGUSR1 is reserved for use by xpool.rb, it is caught when shutting down a process.
-Feel free to use `SIGUSR2` or any other signal instead.
-
 ## <a id="install">Install</a>
 
-As a rubygem:
+As a Rubygem:
 
     gem install xpool.rb
 
-As a bundled gem, in your Gemfile:
+Gemfile:
 
 ```ruby
 gem "xpool.rb", "~> 2.0"
