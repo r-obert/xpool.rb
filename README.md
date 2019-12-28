@@ -9,12 +9,12 @@
 
 xpool.rb is an implementation of a process pool that was built with
 [xchan.rb](https://github.com/rg-3/xchan.rb). A process pool can utilize all
-cores available on your CPU, and also provide an isolated memory space for
-running a job.  
+cores on a CPU, and also provide an isolated memory space to run a job / other
+code.
 
-xpool.rb is best suited for long running or short running scripts who want to
-achieve parallelism, it's not well suited for a Rails application and there
-are other projects better suited for Rails, like [Sidekiq](https://github.com/mperham/sidekiq).
+xpool.rb is best suited for long and short running scripts, it's not well suited
+for a Rails application and there are other projects better suited for Rails,
+like [Sidekiq](https://github.com/mperham/sidekiq).
 
 ## <a id='examples'>Examples</a>
 
@@ -116,7 +116,7 @@ pool.shutdown
 
 ## <a id="install">Install</a>
 
-As a Rubygem:
+Rubygems:
 
     gem install xpool.rb
 
