@@ -9,8 +9,8 @@
 
 xpool.rb is an implementation of a process pool that was built with
 [xchan.rb](https://github.com/rg-3/xchan.rb). A process pool can utilize all
-cores on a CPU, and also provide an isolated memory space to run a job / other
-code.
+cores on a CPU, and also provide an isolated memory space to run a job or
+piece of code.
 
 xpool.rb is best suited for long and short running scripts, it's not well suited
 for a Rails application and there are other projects better suited for Rails,
@@ -20,10 +20,10 @@ like [Sidekiq](https://github.com/mperham/sidekiq).
 
 __1.__
 
-To schedule a job, define a class that responds to `#run`, then pass an instance
-of that class to the `#schedule` method. The first argument given to `XPool.new` is
-the number of processes to populate a pool with. It defaults to the number of cores
-available on your computers CPU.
+To schedule a job to run on a pool, define a class that responds to `#run`, and
+then pass an instance of that class to the `#schedule` method. The first
+argument given to `XPool.new` is the number of processes to populate a pool
+with. It defaults to the number of cores on your computers CPU.
 
 ```ruby
 # Define a job before initializing the pool or you will run into confusing
@@ -49,8 +49,8 @@ pool.shutdown
 __2.__
 
 The `#schedule` method returns an `XPool::Process` object that you can interact
-with. It represents the process running a job. Arguments can be passed to a job
-from the `#schedule` method.
+with. It represents the process running a scheduled job. Arguments are passed
+to a job from the `#schedule` method.
 
 ```ruby
 class Job
@@ -74,7 +74,7 @@ pool.shutdown
 
 __3.__
 
-Broadcast a job to run on all processes in a pool:
+Broadcasts a job to run on all processes in a pool:
 
 ```ruby
 class Job
@@ -92,7 +92,7 @@ pool.shutdown
 
 __4.__
 
-A pool can be resized to be bigger or smaller.
+A pool can be easily resized to be bigger or smaller:
 
 ```ruby
 class Job
@@ -109,8 +109,8 @@ class Job
   end
 end
 pool = XPool.new(4)
-pool.shrink! 2 # Reduces the number of pool processes to 2.
-pool.expand! 3 # Increase the number of pool processes to 5.
+pool.shrink!(2) # Reduces the number of pool processes to 2.
+pool.expand!(3) # Increase the number of pool processes to 5.
 pool.shutdown
 ```
 
