@@ -10,7 +10,7 @@ class XPool::Process
   #   Returns an instance of XPool::Process
   #
   def initialize
-    @job_queue = xchan Marshal
+    @ch = xchan Marshal
     @shutdown = false
     @frequency = 0
     @id = fork do
@@ -70,7 +70,7 @@ class XPool::Process
       raise RuntimeError, "The process has shutdown."
     end
     @frequency += 1
-    @job_queue.send job: job, args: args
+    @ch.send job: job, args: args
     self
   end
 
@@ -81,13 +81,13 @@ class XPool::Process
   rescue Errno::ECHILD, Errno::ESRCH
   ensure
     @shutdown = true
-    @job_queue.close
+    @ch.close
   end
 
   def read_loop
-    if @job_queue.readable?
+    if @ch.readable?
       @frequency += 1
-      message = @job_queue.recv
+      message = @ch.recv
       message[:job].run *message[:args]
     else
       sleep 0.05
@@ -95,7 +95,7 @@ class XPool::Process
   rescue StandardError
     retry
   ensure
-    if @shutdown_requested && !@job_queue.readable?
+    if @shutdown_requested && !@ch.readable?
       exit 0
     end
   end
