@@ -1,5 +1,5 @@
 class XPool
-  require 'xchannel'
+  require 'xchan'
   require 'rbconfig'
   require 'timeout'
   require_relative 'xpool/version'
@@ -85,7 +85,7 @@ class XPool
 
   #
   # A graceful shutdown of the pool.
-  # Each subprocess in the pool empties its queue and exits normally.
+  # Each child process in the pool empties its queue and exits normally.
   #
   # @param [Integer] timeout
   #   An optional amount of seconds to wait before forcing a shutdown through
@@ -146,16 +146,15 @@ class XPool
   end
 
   #
-  # Dispatch a job in a child process.
+  # Dispatch a job to a child process.
   #
   # @param
   #   (see Process#schedule)
   #
   # @raise [RuntimeError]
-  #   When the pool is dead (no child processes are left running)
+  #   When no child processes are running.
   #
   # @return [XPool::Process]
-  #   Returns an instance of XPool::Process.
   #
   def schedule(job,*args)
     process = @pool.min_by(&:frequency)

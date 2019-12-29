@@ -10,7 +10,7 @@ class XPool::Process
   #   Returns an instance of XPool::Process
   #
   def initialize
-    @job_queue = XChannel.unix Marshal
+    @job_queue = xchan Marshal
     @shutdown = false
     @frequency = 0
     @id = fork do
@@ -25,7 +25,7 @@ class XPool::Process
   # @return [void]
   #
   def shutdown
-    perform_shutdown 'SIGUSR1' if ! @shutdown
+    perform_shutdown 'SIGUSR1' if not @shutdown
   end
 
   #
@@ -34,7 +34,7 @@ class XPool::Process
   # @return [void]
   #
   def shutdown!
-    perform_shutdown 'SIGKILL' if ! @shutdown
+    perform_shutdown 'SIGKILL' if not @shutdown
   end
 
   #
@@ -42,7 +42,7 @@ class XPool::Process
   #   Returns true when the process has shutdown.
   def shutdown?
     @shutdown
-  end 
+  end
 
   #
   # @return [Integer]
@@ -95,6 +95,8 @@ class XPool::Process
   rescue StandardError
     retry
   ensure
-    exit 0 if @shutdown_requested && ! @job_queue.readable?
+    if @shutdown_requested && !@job_queue.readable?
+      exit 0
+    end
   end
 end
