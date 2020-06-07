@@ -10,8 +10,8 @@
 xpool.rb is an implementation of a process pool that was built with
 [xchan.rb](https://github.com/rg-3/xchan.rb). A process pool can utilize all
 cores on a CPU, and provide a separate memory space to run a "job", which could
-be any piece of code. Don't confuse xpool.rb with background jobs, it is one of
-the many things xpool.rb could be used for.
+be any piece of code. Try not to confuse xpool.rb solely with background jobs, it
+is one of the many things xpool.rb could be used for.
 
 xpool.rb is best suited for long and short running scripts, it's not well suited
 for a Rails application and there are other projects better suited for Rails,
