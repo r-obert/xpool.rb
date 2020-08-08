@@ -20,26 +20,23 @@ like [Sidekiq](https://github.com/mperham/sidekiq).
 
 ## <a id='examples'>Examples</a>
 
-__1.__
+**#1**
 
-The following example defines a class that implements `#run`.  
-That's the only requirement for a class you'd like to schedule.  
-The `#run` method will be called from a child process in the pool.
-
+This example demonstrates scheduling the `Job` class, any class that implements 
+a `#run` method can be scheduled. It is recommended to rescue exceptions yourself
+because there's no auto retries, error handling is left up to you.
 
 ```ruby
 class Job
   def run
-    do_work
+    cpu_intesive_work
   rescue StandardError
-    # It's recommended to manage exceptions yourself.
-    # There are no automatic retries.
+    # Handle error
   end
 
   private
 
-  def do_work
-    # ...
+  def cpu_intesive_work
   end
 end
 pool = XPool.new(2)
@@ -47,80 +44,12 @@ pool.schedule Job.new
 pool.shutdown
 ```
 
-__2.__
-
-The `#schedule` method returns an instance of `XPool::Process` that you can interact with.  
-Arguments are forwarded to the `#run` method from the `#schedule` method.
-
-```ruby
-class EmailJob
-  def run(email)
-    deliver_email(email)
-  rescue StandardError
-    # It's recommend to manage exceptions yourself.
-    # There are no automatic retries.
-  end
-
-  private
-
-  def deliver_email(email)
-    # ..
-  end
-end
-pool = XPool.new(2)
-process = pool.schedule EmailJob.new, 'user@example.com'
-process.id # => Process ID.
-pool.shutdown
-```
-
-__3.__
-
-The following example broadcasts the Job class across the pool,
-running it on each child process in the pool:
-
-```ruby
-class Job
-  def run
-    puts "Hello from #{Process.pid}"
-  rescue StandardError
-    # It's recommended to manage exceptions yourself.
-    # There are no automatic retries.
-  end
-end
-pool = XPool.new(4)
-pool.broadcast Job.new
-pool.shutdown
-```
-
-__4.__
-
-A pool can be resized to be bigger or smaller:
-
-```ruby
-class Job
-  def run
-    do_work
-  rescue StandardError
-    # It's recommended to manage exceptions yourself.
-    # There are no automatic retries.
-  end
-
-  private
-
-  def do_work
-    # ...
-  end
-end
-pool = XPool.new(4)
-pool.shrink!(2) # Reduces the number of pool processes to 2.
-pool.expand!(3) # Expands the number of pool processes to 5.
-pool.shutdown
-```
-
 ## <a id="install">Install</a>
+
+The easiest way to install xpool.rb is via RubyGems:
 
     gem install xpool.rb
 
 ## <a id="license">License</a>
 
-This project uses the MIT license, see [LICENSE.txt](./LICENSE.txt) for details.
+The MIT license, see [LICENSE.txt](./LICENSE.txt) for details.
