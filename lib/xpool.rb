@@ -138,7 +138,7 @@ class XPool
   end
 
   #
-  # Dispatch a job to a child process.
+  # Dispatch a job to a pool process.
   #
   # @param
   #   (see Process#schedule)
