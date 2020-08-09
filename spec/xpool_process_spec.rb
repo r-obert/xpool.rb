@@ -8,10 +8,10 @@ RSpec.describe XPool::Process do
     process.shutdown!
   end
 
-  describe '#frequency' do 
+  describe '#run_count' do 
     it 'increments by 1 each time a job is scheduled' do
       4.times { process.schedule Sleeper.new(0.1) }
-      expect(process.frequency).to eq(4)
+      expect(process.run_count).to eq(4)
     end
   end 
 

@@ -12,7 +12,7 @@ class XPool::Process
   def initialize
     @ch = xchan Marshal
     @shutdown = false
-    @frequency = 0
+    @run_count = 0
     @id = fork do
       trap(:SIGUSR1) { @shutdown_requested = true }
       loop &method(:read_loop)
@@ -20,7 +20,7 @@ class XPool::Process
   end
 
   #
-  # Perform a graceful shutdown of the process.
+  # Perform a graceful shutdown of a process.
   #
   # @return [void]
   #
@@ -29,7 +29,7 @@ class XPool::Process
   end
 
   #
-  # Perform a hard shutdown by sending SIGKILL to the process.
+  # Perform a hard shutdown by sending SIGKILL to a process.
   #
   # @return [void]
   #
@@ -39,17 +39,17 @@ class XPool::Process
 
   #
   # @return [Integer]
-  #   Returns true when the process has shutdown.
+  #   Returns true when a process has shutdown.
   def shutdown?
     @shutdown
   end
 
   #
   # @return [Integer]
-  #   The number of times the process has run a job.
+  #   The number of times a process has run a job.
   #
-  def frequency
-    @frequency
+  def run_count
+    @run_count
   end
 
   #
@@ -60,7 +60,7 @@ class XPool::Process
   #   A variable number of arguments to be passed to #run.
   #
   # @raise [RuntimeError]
-  #   Raised when the process has shutdown.
+  #   Raised when a process has shutdown.
   #
   # @return [XPool::Process]
   #   Returns self.
@@ -69,12 +69,13 @@ class XPool::Process
     if shutdown?
       raise RuntimeError, "The process has shutdown."
     end
-    @frequency += 1
+    @run_count += 1
     @ch.send job: job, args: args
     self
   end
 
   private
+
   def perform_shutdown(sig)
     Process.kill sig, @id
     Process.wait @id
@@ -86,17 +87,13 @@ class XPool::Process
 
   def read_loop
     if @ch.readable?
-      @frequency += 1
+      @run_count += 1
       message = @ch.recv
       message[:job].run *message[:args]
     else
-      sleep 0.05
+      sleep 0.1
     end
-  rescue StandardError
-    retry
   ensure
-    if @shutdown_requested && !@ch.readable?
-      exit 0
-    end
+    exit 0 if @shutdown_requested && !@ch.readable?
   end
 end

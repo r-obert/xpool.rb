@@ -157,7 +157,7 @@ class XPool
   # @return [XPool::Process]
   #
   def schedule(job,*args)
-    process = @pool.min_by(&:frequency)
+    process = @pool.min_by(&:run_count)
     process.schedule job, *args
   end
 
