@@ -17,7 +17,7 @@ class XPool
 
   #
   # @param [Integer] size
-  #  The number of child processes to spawn.
+  #  The number of processes to spawn.
   #
   # @return [XPool]
   #
@@ -27,7 +27,7 @@ class XPool
 
   #
   # @param [Integer] number
-  #  The number of child processes to add to a pool.
+  #  The number of processes to add to a pool.
   #
   # @return
   #   (see XPool#resize!)
@@ -38,7 +38,7 @@ class XPool
 
   #
   # @param [Integer] number
-  #  The number of child processes to remove from a pool.
+  #  The number of processes to remove from a pool.
   #
   # @raise
   #   (see XPool#shrink!)
@@ -55,7 +55,7 @@ class XPool
 
   #
   # @param [Integer] number
-  #   The number of child processes to remove from a pool.
+  #   The number of processes to remove from a pool.
   #
   # @raise [ArgumentError]
   #   When _number_ is greater than {#size}.
@@ -71,7 +71,7 @@ class XPool
   end
 
   #
-  # Broadcasts *job* to run on all child processes in a pool.
+  # Broadcasts *job* to run on all processes in a pool.
   #
   # @example
   #   pool = XPool.new 5
@@ -152,7 +152,7 @@ class XPool
 
   #
   # @return [Integer]
-  #   Returns the number of child processes in a pool.
+  #   Returns the number of processes in a pool.
   #
   def size
     @pool.size
