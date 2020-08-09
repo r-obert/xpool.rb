@@ -58,7 +58,7 @@ class XPool
   #   The number of processes to remove from a pool.
   #
   # @raise [ArgumentError]
-  #   When _number_ is greater than {#size}.
+  #   When *number* is greater than {#size}.
   #
   # @return
   #   (see XPool#resize!)
@@ -74,8 +74,8 @@ class XPool
   # Broadcasts *job* to run on all processes in a pool.
   #
   # @example
-  #   pool = XPool.new 5
-  #   pool.broadcast job
+  #   pool = xpool(size: 5)
+  #   pool.broadcast(job)
   #   pool.shutdown
   #
   # @return [Array<XPool::Process>]
@@ -121,23 +121,6 @@ class XPool
   end
 
   #
-  # Resize a pool with force.
-  #
-  # @example
-  #   pool = XPool.new 5
-  #   pool.resize! 3
-  #   pool.shutdown
-  #
-  # @param [Integer] new_size
-  #   The new size of a pool.
-  #
-  # @return [void]
-  #
-  def resize!(new_size)
-    _resize new_size, true
-  end
-
-  #
   # Dispatch a job to a pool process.
   #
   # @param
@@ -145,7 +128,7 @@ class XPool
   #
   # @return [XPool::Process]
   #
-  def schedule(job,*args)
+  def schedule(job, *args)
     process = @pool.min_by(&:run_count)
     process.schedule job, *args
   end
