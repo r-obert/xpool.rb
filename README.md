@@ -24,7 +24,8 @@ like [Sidekiq](https://github.com/mperham/sidekiq).
 
 This example demonstrates scheduling the `Job` class, any class that implements 
 a `#run` method can be scheduled. It is recommended to rescue exceptions yourself
-because there's no auto retries, error handling is left up to you.
+because there's no auto retries, error handling is left up to you. The `xpool` 
+method is inherited by `Object` and it returns an instance of `XPool`. 
 
 ```ruby
 class Job
@@ -39,7 +40,7 @@ class Job
   def cpu_intesive_work
   end
 end
-pool = XPool.new(2)
+pool = xpool(size: 2)
 pool.schedule Job.new
 pool.shutdown
 ```

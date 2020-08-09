@@ -5,20 +5,29 @@ class XPool
   require_relative 'xpool/version'
   require_relative 'xpool/process'
 
+  module ObjectMixin
+    def xpool(size: )
+      XPool.new(size: size)
+    end
+  end
+
+  class ::Object
+    include ObjectMixin
+  end
+
   #
   # @param [Integer] size
-  #   The number of child processes to spawn.
-  #   Defaults to the number of cores on your computers CPU.
+  #  The number of child processes to spawn.
   #
   # @return [XPool]
   #
-  def initialize(size=number_of_cpu_cores)
+  def initialize(size: )
     @pool = Array.new(size) { Process.new }
   end
 
   #
   # @param [Integer] number
-  #   The number of child processes to add to the pool.
+  #  The number of child processes to add to a pool.
   #
   # @return
   #   (see XPool#resize!)
@@ -29,8 +38,7 @@ class XPool
 
   #
   # @param [Integer] number
-  #   The number of child processes to remove from the pool.
-  #   A graceful shutdown is performed.
+  #  The number of child processes to remove from a pool.
   #
   # @raise
   #   (see XPool#shrink!)
@@ -47,8 +55,7 @@ class XPool
 
   #
   # @param [Integer] number
-  #   The number of child processes to remove from the pool.
-  #   A forceful shutdown is performed.
+  #   The number of child processes to remove from a pool.
   #
   # @raise [ArgumentError]
   #   When _number_ is greater than {#size}.
@@ -64,32 +71,26 @@ class XPool
   end
 
   #
-  # Broadcasts _job_ to be run across all child processes in the pool.
+  # Broadcasts *job* to run on all child processes in a pool.
   #
   # @example
   #   pool = XPool.new 5
   #   pool.broadcast job
   #   pool.shutdown
   #
-  # @raise [RuntimeError]
-  #   When a subprocess in the pool is dead.
-  #
   # @return [Array<XPool::Process>]
-  #   Returns an array of XPool::Process objects
+  #   Returns an array of {XPool::Process} objects.
   #
   def broadcast(job, *args)
-    @pool.map do |process|
-      process.schedule job, *args
-    end
+    @pool.map {|process| process.schedule job, *args}
   end
 
   #
-  # A graceful shutdown of the pool.
-  # Each child process in the pool empties its queue and exits normally.
+  # Performs a graceful shutdown of a pool.
   #
   # @param [Integer] timeout
-  #   An optional amount of seconds to wait before forcing a shutdown through
-  #   {#shutdown!}.
+  #   An optional amount of seconds to wait before forcing a 
+  #   shutdown through `SIGKILL`.
   #
   # @return [void]
   #
@@ -108,16 +109,7 @@ class XPool
   end
 
   #
-  # A forceful shutdown of the pool (through SIGKILL).
-  #
-  # @return [void]
-  #
-  def shutdown!
-    @pool.each(&:shutdown!)
-  end
-
-  #
-  # Resize the pool (gracefully, if neccesary)
+  # Resize a pool gracefully.
   #
   # @param
   #   (see XPool#resize!)
@@ -129,7 +121,7 @@ class XPool
   end
 
   #
-  # Resize the pool (with force, if neccesary).
+  # Resize a pool with force.
   #
   # @example
   #   pool = XPool.new 5
@@ -137,7 +129,7 @@ class XPool
   #   pool.shutdown
   #
   # @param [Integer] new_size
-  #   The new size of the pool.
+  #   The new size of a pool.
   #
   # @return [void]
   #
@@ -150,9 +142,6 @@ class XPool
   #
   # @param
   #   (see Process#schedule)
-  #
-  # @raise [RuntimeError]
-  #   When no child processes are running.
   #
   # @return [XPool::Process]
   #
@@ -170,22 +159,10 @@ class XPool
   end
 
   private
+
   def raise_if(predicate, e, m)
     if predicate
       raise e, m
-    end
-  end
-
-  def number_of_cpu_cores
-    case RbConfig::CONFIG['host_os']
-    when /linux/
-      Dir.glob('/sys/devices/system/cpu/cpu[0-9]*').count
-    when /darwin|bsd/
-      Integer(`sysctl -n hw.ncpu`)
-    when /solaris/
-      Integer(`kstat -m cpu_info | grep -w core_id | uniq | wc -l`)
-    else
-      2
     end
   end
 

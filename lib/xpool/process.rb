@@ -25,7 +25,7 @@ class XPool::Process
   # @return [void]
   #
   def shutdown
-    perform_shutdown 'SIGUSR1' if not @shutdown
+    perform_shutdown 'SIGUSR1' if !@shutdown
   end
 
   #
@@ -34,12 +34,13 @@ class XPool::Process
   # @return [void]
   #
   def shutdown!
-    perform_shutdown 'SIGKILL' if not @shutdown
+    perform_shutdown 'SIGKILL' if !@shutdown
   end
 
   #
   # @return [Integer]
   #   Returns true when a process has shutdown.
+  #
   def shutdown?
     @shutdown
   end
@@ -57,18 +58,12 @@ class XPool::Process
   #   The job.
   #
   # @param [Object] *args
-  #   A variable number of arguments to be passed to #run.
-  #
-  # @raise [RuntimeError]
-  #   Raised when a process has shutdown.
+  #  Variable number of arguments to be passed to #run.
   #
   # @return [XPool::Process]
   #   Returns self.
   #
   def schedule(job,*args)
-    if shutdown?
-      raise RuntimeError, "The process has shutdown."
-    end
     @run_count += 1
     @ch.send job: job, args: args
     self
