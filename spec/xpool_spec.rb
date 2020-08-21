@@ -14,9 +14,9 @@ RSpec.describe XPool do
   end
 
   describe '#broadcast' do
-    it 'broadcasts a job across a pool' do
-      child_processes = pool.broadcast Sleeper.new(1)
-      child_processes.each { |process| expect(process.run_count).to eq(1) }
+    it 'broadcasts a callable across a pool' do
+      processes = pool.broadcast Sleeper.new(1)
+      processes.each { |process| expect(process.run_count).to eq(1) }
     end
   end
 
@@ -27,7 +27,7 @@ RSpec.describe XPool do
   end
 
   describe '#shutdown' do
-    it 'allows jobs to finish before clearing the queue' do
+    it 'allows callables to finish before clearing the queue' do
       pool.resize(1)
       writers = Array.new(pool_size) { IOWriter.new }
       writers.each { |writer| pool.schedule writer }
@@ -37,7 +37,7 @@ RSpec.describe XPool do
   end
 
   describe '#schedule' do
-    it 'distrubutes a job across the pool' do
+    it 'distrubutes a callable across the pool' do
       child_proccesses = Array.new(pool_size) { pool.schedule Sleeper.new(0.1) }
       child_proccesses.each { |subprocess| expect(subprocess.run_count).to eq(1) }
     end
