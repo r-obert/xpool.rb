@@ -30,44 +30,21 @@ class XPool
   #  The number of processes to add to a pool.
   #
   # @return
-  #   (see XPool#resize!)
+  #   (see XPool#resize)
   #
   def expand(number)
-    resize! size + number
+    resize size + number
   end
 
   #
   # @param [Integer] number
   #  The number of processes to remove from a pool.
   #
-  # @raise
-  #   (see XPool#shrink!)
-  #
   # @return
-  #   (see Xpool#shrink!)
+  #   (see XPool#resize)
   #
   def shrink(number)
-    raise_if number > size,
-      ArgumentError,
-      "cannot shrink pool by #{number}. pool is only #{size} in size."
     resize size - number
-  end
-
-  #
-  # @param [Integer] number
-  #   The number of processes to remove from a pool.
-  #
-  # @raise [ArgumentError]
-  #   When *number* is greater than {#size}.
-  #
-  # @return
-  #   (see XPool#resize!)
-  #
-  def shrink!(number)
-    raise_if number > size,
-      ArgumentError,
-      "cannot shrink pool by #{number}. pool is only #{size} in size."
-    resize! size - number
   end
 
   #
@@ -89,19 +66,18 @@ class XPool
   # Performs a graceful shutdown of a pool.
   #
   # @param [Integer] timeout
-  #   An optional amount of seconds to wait before forcing a 
-  #   shutdown through `SIGKILL`.
+  #   The number of seconds to wait before performing shutdown with `SIGKILL`.
   #
   # @return [void]
   #
-  def shutdown(timeout=nil)
+  def shutdown(timeout: nil)
     if timeout
       begin
         Timeout.timeout(timeout) do
           @pool.each(&:shutdown)
         end
       rescue Timeout::Error
-        shutdown!
+        @pool.each{|process| Process.kill 'SIGKILL', process.id}
       end
     else
       @pool.each(&:shutdown)
@@ -109,15 +85,28 @@ class XPool
   end
 
   #
-  # Resize a pool gracefully.
+  # Resize a pool and if shrinking the pool wait for processes to
+  # finish their current job before letting them exit.
   #
-  # @param
-  #   (see XPool#resize!)
+  # @param [Integer] size
+  #  The new size of the pool.
   #
   # @return [void]
   #
   def resize(new_size)
-    _resize new_size, false
+    new_size -= 1
+    old_size = size - 1
+    if new_size < 0
+      @pool.each(&:shutdown)
+      @pool = []
+    elsif new_size == old_size
+      # do nothing
+    elsif new_size < old_size
+      @pool[new_size+1..old_size].each(&:shutdown)
+      @pool = @pool[0..new_size]
+    else
+      @pool += Array.new(new_size - old_size) { Process.new }
+    end
   end
 
   #
@@ -139,27 +128,5 @@ class XPool
   #
   def size
     @pool.size
-  end
-
-  private
-
-  def raise_if(predicate, e, m)
-    if predicate
-      raise e, m
-    end
-  end
-
-  def _resize(new_size, with_force)
-    new_size -= 1
-    old_size = size - 1
-    if new_size == old_size
-      # do nothing
-    elsif new_size < old_size
-      meth = with_force ? :shutdown! : :shutdown
-      @pool[new_size+1..old_size].each(&meth)
-      @pool = @pool[0..new_size]
-    else
-      @pool += Array.new(new_size - old_size) { Process.new }
-    end
   end
 end
