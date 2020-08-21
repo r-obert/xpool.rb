@@ -6,7 +6,7 @@ class IOWriter
     file.close false
   end
 
-  def run
+  def call
     File.open @path, 'w' do |f|
       f.write 'true'
     end
@@ -18,16 +18,5 @@ class IOWriter
       FileUtils.rm_rf @path
       val == 'true'
     end
-  end
-end
-
-class IOSetupWriter < IOWriter
-  def setup
-    File.open @path, 'w' do |f|
-      f.write 'true'
-    end
-  end
-
-  def run
   end
 end

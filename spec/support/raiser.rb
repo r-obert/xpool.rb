@@ -3,7 +3,7 @@ class Raiser
     @seconds = seconds
   end
 
-  def run
+  def call
     sleep @seconds
     raise RuntimeError, "", %w(42)
   end

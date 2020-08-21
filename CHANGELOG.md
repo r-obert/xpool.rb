@@ -2,8 +2,16 @@
 
 ## v3.0.0 (unreleased)
 
-* Instead of raising an error, `XPool#shrink` reduces the pool size to 0
-  when given a number larger than the pool.
+* Add `XPool::Process#fork`.
+
+* Rescue and swallow errors left unhandled by `#call`.
+
+* Invoke `#call` method instead of `#run`.
+
+* Refer to items you can schedule as "callable" instead of as "job".
+
+* `XPool#shrink` reduces the pool size to 0 when given a number larger than the
+  pool, instead of raising an error.
 
 * Remove `XPool#resize!`.
 

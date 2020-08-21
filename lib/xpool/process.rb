@@ -12,10 +12,14 @@ class XPool::Process
   def initialize
     @ch = xchan Marshal
     @shutdown = false
-    @run_count = 0
-    @id = fork do
+    @callable_count = 0
+    @id = nil
+  end
+
+  def fork
+    @id = super do
       trap(:SIGUSR1) { @shutdown_requested = true }
-      loop &method(:read_loop)
+      loop { read_loop }
     end
   end
 
@@ -47,25 +51,25 @@ class XPool::Process
 
   #
   # @return [Integer]
-  #   The number of times a process has run a job.
+  #   The number of times a callable has been scheduled on a process.
   #
-  def run_count
-    @run_count
+  def callable_count
+    @callable_count
   end
 
   #
-  # @param [#run] job
-  #   The job.
+  # @param [#call] callable
+  #   An object who implements `#call` (except Proc objects).
   #
   # @param [Object] *args
-  #  Variable number of arguments to be passed to #run.
+  #  Variable number of arguments to be passed to #call.
   #
   # @return [XPool::Process]
   #   Returns self.
   #
-  def schedule(job,*args)
-    @run_count += 1
-    @ch.send job: job, args: args
+  def schedule(callable, *args)
+    @callable_count += 1
+    @ch.send callable: callable, args: args
     self
   end
 
@@ -82,9 +86,8 @@ class XPool::Process
 
   def read_loop
     if @ch.readable?
-      @run_count += 1
       message = @ch.recv
-      message[:job].run *message[:args]
+      message[:callable].call(*message[:args]) rescue nil
     else
       sleep 0.1
     end

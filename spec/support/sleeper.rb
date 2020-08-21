@@ -3,7 +3,7 @@ class Sleeper
     @seconds = seconds
   end
 
-  def run
+  def call
     sleep @seconds
   end
 end

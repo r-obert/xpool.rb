@@ -22,7 +22,7 @@ class XPool
   # @return [XPool]
   #
   def initialize(size: )
-    @pool = Array.new(size) { Process.new }
+    @pool = Array.new(size) { Process.new.tap(&:fork) }
   end
 
   #
@@ -48,18 +48,18 @@ class XPool
   end
 
   #
-  # Broadcasts *job* to run on all processes in a pool.
+  # Broadcasts *callable* to run on all processes in a pool.
   #
   # @example
   #   pool = xpool(size: 5)
-  #   pool.broadcast(job)
+  #   pool.broadcast(callable)
   #   pool.shutdown
   #
   # @return [Array<XPool::Process>]
   #   Returns an array of {XPool::Process} objects.
   #
-  def broadcast(job, *args)
-    @pool.map {|process| process.schedule job, *args}
+  def broadcast(callable, *args)
+    @pool.map {|process| process.schedule callable, *args}
   end
 
   #
@@ -86,7 +86,7 @@ class XPool
 
   #
   # Resize a pool and if shrinking the pool wait for processes to
-  # finish their current job before letting them exit.
+  # finish their current callable before letting them exit.
   #
   # @param [Integer] size
   #  The new size of the pool.
@@ -105,21 +105,21 @@ class XPool
       @pool[new_size+1..old_size].each(&:shutdown)
       @pool = @pool[0..new_size]
     else
-      @pool += Array.new(new_size - old_size) { Process.new }
+      @pool += Array.new(new_size - old_size) { Process.new.tap(&:fork) }
     end
   end
 
   #
-  # Dispatch a job to a pool process.
+  # Dispatch a callable to a pool process.
   #
   # @param
   #   (see Process#schedule)
   #
   # @return [XPool::Process]
   #
-  def schedule(job, *args)
-    process = @pool.min_by(&:run_count)
-    process.schedule job, *args
+  def schedule(callable, *args)
+    process = @pool.min_by(&:callable_count)
+    process.schedule callable, *args
   end
 
   #
