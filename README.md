@@ -11,37 +11,68 @@
 
 xpool.rb is an implementation of a process pool that was built with
 [xchan.rb](https://github.com/rg-3/xchan.rb). A process pool can utilize all
-cores on a CPU, and provide a separate memory space to run a "job", which could
-be any piece of code.
+cores on a CPU, and each process in a pool provides a separate memory space to
+run a "callable", which is any object that implements a `call` method
+(except Proc objects).
 
-xpool.rb is best suited for long and short running scripts. If you're looking
-for a Rails solution for background jobs I suggest checking out a project
-like [Sidekiq](https://github.com/mperham/sidekiq).
+xpool.rb is intended for short and long running scripts and possibly small web
+applications. I recommend [Sidekiq](https://github.com/mperham/sidekiq) for
+a solution Rails applications can use.
 
 ## <a id='examples'>Examples</a>
 
 **#1**
 
-This example demonstrates scheduling the `Job` class, any class that implements 
-a `#run` method can be scheduled. It is recommended to rescue exceptions yourself
-because there's no auto retries, error handling is left up to you. The `xpool` 
-method is inherited by `Object` and it returns an instance of `XPool`. 
+Any object that implements `#call` can be scheduled, excluding `Proc` objects.
+
+Although there are no automatic retries, error handling is transparent and
+automatic retries easily implemented. It is recommended to _always_ rescue and
+handle errors in some way. The example handles errors through a retry.
+
+If errors are left unrescued, xpool.rb rescues them and the process
+then picks up the next item on its queue.
 
 ```ruby
-class Job
-  def run
-    cpu_intesive_work
-  rescue StandardError
-    # Handle error
+class EmailDelivery
+  def initialize(email)
+    @email = email
+  end
+
+  def call(attempts = 3)
+    deliver_email(@email)
+  rescue StandardError => ex
+    attempts -= 1
+    attempts.zero? ? Airbrake.notify(ex) : retry
   end
 
   private
 
-  def cpu_intesive_work
+  def deliver_email(email)
   end
 end
 pool = xpool(size: 2)
-pool.schedule Job.new
+pool.schedule EmailDelivery.new('user@example.com')
+pool.shutdown
+```
+
+**#2**
+
+The first example shows just one approach for running something on a pool. You
+could also take another approach using a module function that is passed arguments
+via `pool.schedule`.
+
+
+```ruby
+module EmailDelivery
+  def self.call(email, attempts = 3)
+    # code to deliver email
+  rescue StandardError
+    attempts -= 1
+    attempts.zero? ? Airbrake.notify(ex) : retry
+  end
+end
+pool = xpool(size: 2)
+pool.schedule EmailDelivery, 'user@example.com'
 pool.shutdown
 ```
 
