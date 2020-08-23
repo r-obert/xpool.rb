@@ -5,7 +5,7 @@ require File.expand_path('../lib/xpool/version', __FILE__)
 Gem::Specification.new do |gem|
   gem.name          = "xpool.rb"
   gem.authors       = ["Robert Gleeson"]
-  gem.email         = ["1xab@protonmail.com"]
+  gem.email         = ["1aab@protonmail.com"]
   gem.description   = "xpool.rb is an implementation of a process pool that was built with xchan.rb"
   gem.summary       = gem.description
   gem.homepage      = "https://github.com/rg-3/xpool.rb"
