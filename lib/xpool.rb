@@ -118,7 +118,7 @@ class XPool
   # @return [XPool::Process]
   #
   def schedule(callable, *args)
-    process = @pool.min_by(&:callable_count)
+    process = @pool.min_by(&:call_count)
     process.schedule callable, *args
   end
 

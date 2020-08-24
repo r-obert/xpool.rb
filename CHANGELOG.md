@@ -2,6 +2,8 @@
 
 ## v3.0.0 (unreleased)
 
+* Rename `{XPool, XPool::Process}#run_count` to `call_count`.
+
 * Add `XPool::Process#fork`.
 
 * Rescue and swallow errors left unhandled by `#call`.

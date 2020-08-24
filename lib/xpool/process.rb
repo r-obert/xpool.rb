@@ -12,7 +12,7 @@ class XPool::Process
   def initialize
     @ch = xchan Marshal
     @shutdown = false
-    @callable_count = 0
+    @call_count = 0
     @id = nil
   end
 
@@ -53,8 +53,8 @@ class XPool::Process
   # @return [Integer]
   #   The number of times a callable has been scheduled on a process.
   #
-  def callable_count
-    @callable_count
+  def call_count
+    @call_count
   end
 
   #
@@ -68,7 +68,7 @@ class XPool::Process
   #   Returns self.
   #
   def schedule(callable, *args)
-    @callable_count += 1
+    @call_count += 1
     @ch.send callable: callable, args: args
     self
   end

@@ -16,7 +16,7 @@ RSpec.describe XPool do
   describe '#broadcast' do
     it 'broadcasts a callable across a pool' do
       processes = pool.broadcast Sleeper.new(1)
-      processes.each { |process| expect(process.run_count).to eq(1) }
+      processes.each { |process| expect(process.call_count).to eq(1) }
     end
   end
 
@@ -39,7 +39,7 @@ RSpec.describe XPool do
   describe '#schedule' do
     it 'distrubutes a callable across the pool' do
       child_proccesses = Array.new(pool_size) { pool.schedule Sleeper.new(0.1) }
-      child_proccesses.each { |subprocess| expect(subprocess.run_count).to eq(1) }
+      child_proccesses.each { |subprocess| expect(subprocess.call_count).to eq(1) }
     end
   end
 
