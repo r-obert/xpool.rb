@@ -1,6 +1,10 @@
 # CHANGELOG
 
-## v3.0.0 (unreleased)
+## HEAD
+
+* Nothing yet.
+
+## v3.0.0
 
 * Rename `{XPool, XPool::Process}#run_count` to `call_count`.
 
